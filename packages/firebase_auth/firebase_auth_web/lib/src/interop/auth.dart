@@ -23,18 +23,19 @@ export 'auth_interop.dart';
 Auth getAuthInstance(App app, {Persistence? persistence}) {
   final auth = Auth.getInstance(
     auth_interop.initializeAuth(
-        app.jsObject,
-        jsify({
-          'errorMap': auth_interop.debugErrorMap,
-          // Default persistence can be seen here
-          // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
-          'persistence': [
-            auth_interop.indexedDBLocalPersistence,
-            auth_interop.browserLocalPersistence,
-            auth_interop.browserSessionPersistence
-          ],
-          'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
-        }),),
+      app.jsObject,
+      jsify({
+        'errorMap': auth_interop.debugErrorMap,
+        // Default persistence can be seen here
+        // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+        'persistence': [
+          auth_interop.indexedDBLocalPersistence,
+          auth_interop.browserLocalPersistence,
+          auth_interop.browserSessionPersistence
+        ],
+        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+      }),
+    ),
   );
 
   if (persistence != null) {
