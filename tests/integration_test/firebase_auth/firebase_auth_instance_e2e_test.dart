@@ -869,7 +869,7 @@ void main() {
 
       group('issues', () {
         test(
-          '#10961 - instanceFor(persistence) should not throw an error',
+          'instanceFor(persistence) should not throw an error',
           () {
             expect(
               () => FirebaseAuth.instanceFor(
@@ -879,7 +879,7 @@ void main() {
               returnsNormally,
             );
           },
-        skip: !kIsWeb,
+          skip: !kIsWeb,
         );
       });
     },
