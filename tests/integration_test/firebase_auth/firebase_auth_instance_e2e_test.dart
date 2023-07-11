@@ -866,6 +866,22 @@ void main() {
         },
         skip: true,
       );
+
+      group('issues', () {
+        test(
+          '#10961 - instanceFor(persistence) should not throw an error',
+          () {
+            expect(
+              () => FirebaseAuth.instanceFor(
+                app: FirebaseAuth.instance.app,
+                persistence: Persistence.LOCAL,
+              ),
+              returnsNormally,
+            );
+          },
+        skip: !kIsWeb,
+        );
+      });
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
     skip: defaultTargetPlatform == TargetPlatform.macOS,

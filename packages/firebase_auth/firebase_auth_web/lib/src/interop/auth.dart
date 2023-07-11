@@ -21,43 +21,27 @@ export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
 Auth getAuthInstance(App app, {Persistence? persistence}) {
-  if (persistence != null) {
-    auth_interop.Persistence setPersistence;
-    switch (persistence) {
-      case Persistence.LOCAL:
-        setPersistence = auth_interop.browserLocalPersistence;
-        break;
-      case Persistence.INDEXED_DB:
-        setPersistence = auth_interop.indexedDBLocalPersistence;
-        break;
-      case Persistence.SESSION:
-        setPersistence = auth_interop.browserSessionPersistence;
-        break;
-      case Persistence.NONE:
-        setPersistence = auth_interop.inMemoryPersistence;
-        break;
-    }
-    return Auth.getInstance(auth_interop.initializeAuth(
+  final auth = Auth.getInstance(
+    auth_interop.initializeAuth(
         app.jsObject,
         jsify({
           'errorMap': auth_interop.debugErrorMap,
-          'persistence': setPersistence,
+          // Default persistence can be seen here
+          // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+          'persistence': [
+            auth_interop.indexedDBLocalPersistence,
+            auth_interop.browserLocalPersistence,
+            auth_interop.browserSessionPersistence
+          ],
           'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
-        })));
+        }),),
+  );
+
+  if (persistence != null) {
+    auth.setPersistence(persistence);
   }
-  return Auth.getInstance(auth_interop.initializeAuth(
-      app.jsObject,
-      jsify({
-        'errorMap': auth_interop.debugErrorMap,
-        // Default persistence can be seen here
-        // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
-        'persistence': [
-          auth_interop.indexedDBLocalPersistence,
-          auth_interop.browserLocalPersistence,
-          auth_interop.browserSessionPersistence
-        ],
-        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
-      })));
+
+  return auth;
 }
 
 /// User profile information, visible only to the Firebase project's apps.
